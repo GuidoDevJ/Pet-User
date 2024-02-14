@@ -16,7 +16,7 @@ export class UserService {
     console.log(createUserDto);
     try {
       const newUser = await this.userDB.create(createUserDto);
-      delete newUser._id;
+      console.log('soy el newuser', newUser);
       return {
         userId: newUser._id,
       };
@@ -39,7 +39,6 @@ export class UserService {
   }
 
   async findOne(id: string) {
-    console.log(id);
     try {
       const user = await this.userDB.findById(id);
       if (!user) throw new HttpException('User not found', 401);
@@ -51,11 +50,21 @@ export class UserService {
     }
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    try {
+      await this.userDB.findByIdAndUpdate(id, updateUserDto);
+      return { msg: 'Update success' };
+    } catch (error) {
+      throw new HttpException({ msg: error.response }, 401);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    try {
+      await this.userDB.findByIdAndDelete(id);
+      return { msg: 'Delete success' };
+    } catch (error) {
+      throw new HttpException({ msg: error.response }, 401);
+    }
   }
 }

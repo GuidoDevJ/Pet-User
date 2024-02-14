@@ -33,13 +33,16 @@ export class UserController {
     return this.userService.findAllPetsByUserId(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  @Patch('update/:id')
+  update(
+    @Param('id', MongoDBID) id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.userService.update(id, updateUserDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  @Delete('delete/:id')
+  remove(@Param('id', MongoDBID) id: string) {
+    return this.userService.remove(id);
   }
 }
